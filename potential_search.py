@@ -128,15 +128,3 @@ class PotentialSearch:
 
         self.total_time = time.time() - start_time
         raise NoSolution(f"No solution within bound {c}. Elapsed time: {self.total_time} seconds.")
-
-
-def tile_puzzle_main():
-    puzzlestr = '4 7 6 5 10 0 1 13 14 2 15 8 9 3 11 12'
-    source = TilePuzzleState(tuple(int(item) for item in puzzlestr.split()))
-    domain = TilePuzzle(4, 4)
-    pts = PotentialSearch(domain)
-    print(pts.solve(source, 60, timeout=3600))
-
-
-if __name__ == '__main__':
-    tile_puzzle_main()
