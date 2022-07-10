@@ -8,6 +8,8 @@ from search.searcher import Searcher, SearchNode, Timeout, NoSolution
 
 class PotentialSearcher(Searcher):
     def solve(self, init_state, c, pure_heuristic_search=False, timeout=60, quiet=False):
+        self.reset_stats()
+
         # If we are dealing with pure heuristic search f(n)=h(n), in the case of potential search f(n)=u(n)
         # Which means the used formula (smaller is better)
         def calc_priority(g, h):
