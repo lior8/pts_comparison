@@ -1,55 +1,13 @@
 import heapq
 import time
-from dataclasses import dataclass, field
 
 from tqdm import tqdm
 
-from domains.domain import DomainState, Domain
-from domains.pancakes import PancakesState, Pancakes
-from domains.tile_puzzle import TilePuzzle, TilePuzzleState
+from search.search_node import SearchNode
+from search.searcher import Searcher, Timeout, NoSolution
 
 
-@dataclass(unsafe_hash=True, order=True)  # Not frozen to allow changing h and, consequently, f.
-# The members that participate in the hash are immutable.
-class SearchNode:
-    f: float = field(hash=False)  # Order of fields determines comparison order
-    h: float = field(hash=False)  # Tie-break in favor of smaller h -> higher g.
-    g: float = field(hash=False)
-    state: DomainState  # It does participate in __cmp__ (and TilePuzzleState is defined with the default
-    # order=True) only to make tie-breaking deterministic
-    parent: "SearchNode" = field(default=None, repr=False, hash=False, compare=False)  # The string is a forward
-    # reference
-    in_open: bool = field(default=True, repr=False, hash=False, compare=False)
-    is_valid: bool = field(default=True, repr=False, hash=False, compare=False)
-
-
-class Timeout(Exception):
-    pass
-
-
-class NoSolution(Exception):
-    pass
-
-
-class PotentialSearch:
-    expanded: int
-    generated: int
-    reopened: int
-    cost: float
-    cost_lower_bound: float
-    total_time: float
-
-    def __init__(self, domain: Domain):
-        self._domain = domain
-        self._reset_stats()
-
-    def _reset_stats(self):
-        self.expanded = 0
-        self.generated = 0
-        self.reopened = 0
-        self.cost = None
-        self.total_time = None
-
+class PotentialSearcher(Searcher):
     def solve(self, init_state, c, pure_heuristic_search=False, timeout=60, quiet=False):
         # If we are dealing with pure heuristic search f(n)=h(n), in the case of potential search f(n)=u(n)
         # Which means the used formula (smaller is better)
