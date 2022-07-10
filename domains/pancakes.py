@@ -26,6 +26,10 @@ class Pancakes(Domain):
             raise Exception('Must provide initial state or stack size')
 
         self.half_gap = False
+        self.ignore_pancakes_up_to = 0
+        self.set_heuristic_degradation(ignore_pancakes_up_to)
+
+    def set_heuristic_degradation(self, ignore_pancakes_up_to):
         if ignore_pancakes_up_to == int(ignore_pancakes_up_to):
             self.ignore_pancakes_up_to = int(ignore_pancakes_up_to)
         else:
