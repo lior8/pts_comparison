@@ -41,6 +41,9 @@ class Searcher(ABC):
         self.cost = None
         self.total_time = None
 
+    def __call__(self, *args, **kwargs):
+        return self.solve(*args, **kwargs)
+
     @abstractmethod
     def solve(self, *args, **kwargs):
         pass
