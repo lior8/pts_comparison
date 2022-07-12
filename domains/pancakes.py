@@ -32,6 +32,7 @@ class Pancakes(Domain):
     def set_heuristic_degradation(self, ignore_pancakes_up_to):
         if ignore_pancakes_up_to == int(ignore_pancakes_up_to):
             self.ignore_pancakes_up_to = int(ignore_pancakes_up_to)
+            self.half_gap = False
         else:
             if ignore_pancakes_up_to - int(ignore_pancakes_up_to) == 0.5:
                 self.ignore_pancakes_up_to = int(ignore_pancakes_up_to) + 1
@@ -43,12 +44,14 @@ class Pancakes(Domain):
         # In this formula, we always add 1 if the max pancake is not at the bottom.
         gaps = 0
         for i in range(len(state.stack) - 1):
-            if state.stack[i] > self.ignore_pancakes_up_to and state.stack[i + 1] > self.ignore_pancakes_up_to \
-                    and abs(state.stack[i] - state.stack[i + 1]) > 1:
-                gaps += 1
-            elif self.half_gap and state.stack[i] == self.ignore_pancakes_up_to and \
-                    state.stack[i + 1] > self.ignore_pancakes_up_to:
-                gaps += 1
+            # First we check if there is a gap, and if the right pancake is not ignored (must be true for half gaps as
+            # well
+            if abs(state.stack[i] - state.stack[i + 1]) > 1 and abs(state.stack[i] - state.stack[i + 1]) > 1:
+                # Then we check if the left one is also not ignored or if it is the pancake of the half gap, which means
+                # that its gap to its right counts
+                if state.stack[i] > self.ignore_pancakes_up_to or\
+                        (self.half_gap and state.stack[i] == self.ignore_pancakes_up_to):
+                    gaps += 1
         return gaps + (state.stack[0] != max(state.stack))
 
     def goal_test(self, state):
