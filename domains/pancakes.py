@@ -46,7 +46,7 @@ class Pancakes(Domain):
         for i in range(len(state.stack) - 1):
             # First we check if there is a gap, and if the right pancake is not ignored (must be true for half gaps as
             # well
-            if abs(state.stack[i] - state.stack[i + 1]) > 1 and abs(state.stack[i] - state.stack[i + 1]) > 1:
+            if abs(state.stack[i] - state.stack[i + 1]) > 1 and state.stack[i + 1] > self.ignore_pancakes_up_to:
                 # Then we check if the left one is also not ignored or if it is the pancake of the half gap, which means
                 # that its gap to its right counts
                 if state.stack[i] > self.ignore_pancakes_up_to or\
