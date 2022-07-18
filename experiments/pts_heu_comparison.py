@@ -42,9 +42,10 @@ def run_experiment(curr_id, instances_set, instances_id_path, results_path, doma
             true_cost = AstarSearcher(domain).solve(new_instance, timeout=3600, quiet=True)[0]
             instances_f.write(f'{curr_id},{";".join(str(i) for i in new_instance.stack)},{true_cost}\n')
             with open(results_path, 'a') as results_f:
-                for degradation in (0, 0.5, 1):
+                for degradation in (0, 0.5, 1, 1.5, 2):
                     domain.set_heuristic_degradation(degradation)
                     for bound_label, bound in ((1, true_cost + 1),
+                                               (1.1, math.ceil(true_cost * 1.1)),
                                                (1.25, math.ceil(true_cost * 1.25)),
                                                (1.5, math.ceil(true_cost * 1.5)),
                                                (1.75, math.ceil(true_cost * 1.75)),
@@ -75,7 +76,7 @@ def create_instance(domain, instances_set):
 
 
 def main():
-    num_of_pancakes = 20
+    num_of_pancakes = 14
     files_dir = pathlib.Path.cwd().parent.joinpath('files')
     instances_id_path = files_dir.joinpath(f'pancakes_instances_ids_{num_of_pancakes}.csv')
     results_path = files_dir.joinpath(f'pancakes_results_{num_of_pancakes}.csv')
