@@ -1,3 +1,5 @@
+import pathlib
+
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -54,23 +56,27 @@ def combine_instances_and_results(data_path, domain_letter):
 
 
 def tile_puzzle_main(ignore_tiles_up_to=0):
-    state_cost_list = combine_instances_and_results('files/15_tile_puzzle_state_cost', 't')
+    file_path = pathlib.Path.cwd().parent.joinpath('files').joinpath('15_tile_puzzle_state_cost.txt')
+    output_path = pathlib.Path.cwd().parent.joinpath('plots').joinpath(f'MD-{ignore_tiles_up_to}')
+    state_cost_list = combine_instances_and_results(file_path, 't')
     cost_values = [sc[1] for sc in state_cost_list]
     domain = TilePuzzle(4, 4, ignore_tiles_up_to=ignore_tiles_up_to)
     heuristic_values = [domain.heuristic(sc[0]) for sc in state_cost_list]
     draw_heuristic_as_function_of_cost(heuristic_values, cost_values, f'Heuristic Estimation (MD-{ignore_tiles_up_to})',
-                                       save_path=f'plots/MD-{ignore_tiles_up_to}')
+                                       save_path=output_path)
     calc_linear_relation(heuristic_values, cost_values)
 
 
 def pancakes_main(ignore_pancakes_up_to=0):
-    state_cost_list = combine_instances_and_results('files/20_pancakes_state_cost', 'p')
+    file_path = pathlib.Path.cwd().parent.joinpath('files').joinpath('20_pancakes_state_cost.txt')
+    output_path = pathlib.Path.cwd().parent.joinpath('plots').joinpath(f'Gap-{ignore_pancakes_up_to}')
+    state_cost_list = combine_instances_and_results(file_path, 'p')
     cost_values = [sc[1] for sc in state_cost_list]
     domain = Pancakes(size=20, ignore_pancakes_up_to=ignore_pancakes_up_to)
     heuristic_values = [domain.heuristic(sc[0]) for sc in state_cost_list]
     draw_heuristic_as_function_of_cost(heuristic_values, cost_values,
                                        f'Heuristic Estimation (GAP-{ignore_pancakes_up_to})',
-                                       save_path=f'plots/Gap-{ignore_pancakes_up_to}')
+                                       save_path=output_path)
 
 
 if __name__ == '__main__':
